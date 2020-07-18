@@ -4,34 +4,39 @@ using UnityEngine;
 
 public class CreateDrops : MonoBehaviour
 {
-    public GameObject [] Drops; 
+    static int height = 8, width = 8; // tablonun yuksekligini ve genisligini tutar
+    public GameObject[] Drops;
+    int[,] dropArray = new int[height, width];
     // Start is called before the first frame update
     void Start()
     {
-        for (int x = 0; x < 8; x++)
+        CreateGame(height, width);
+    }
+
+    void CreateGame(int n, int m)
+    {
+        for (int i = 0; i < n; i += 1) // satir
         {
-            for (int y = 0; y < 8; y++)
+            for (int j = 0; j < m; j++) // sutun
             {
-                CreateTable(x, y);
+                dropArray[i, j] = Random.Range(0, Drops.Length);
+            }
+        }
+               
+
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < m; j++)
+            {
+                GameObject.Instantiate(Drops[dropArray[i, j]], new Vector2(i, j), Quaternion.identity);
             }
         }
     }
 
-    int CreateRandDropNum()
-    {
-        int rand = Random.Range(0, Drops.Length);
-
-        return rand;
-    }
-
-    void CreateTable(int x, int y)
-    {
-        GameObject drop = GameObject.Instantiate(Drops[CreateRandDropNum()], new Vector2(x, y), Quaternion.identity);
-    }
-
+    
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }
