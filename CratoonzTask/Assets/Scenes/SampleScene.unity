@@ -139,7 +139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30bb46c3a93e33d4d80f4ce3e07a6bf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Drops:
+  drops:
   - {fileID: 7314998191328752675, guid: 58a29af92f748ae49b7b074f232c34e5, type: 3}
   - {fileID: 6526316086959778112, guid: 03cea4b06a5116b49b2f49bda0795ccb, type: 3}
   - {fileID: 5873714354528682941, guid: f5ff3f4e97005bf42ac7d9067e153a53, type: 3}

@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\CreateDrops.cs" />
+    <Compile Include="Assets\Scripts\SwipeDrop.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Users/fatih/Documents/GitHub/CratoonzTask/CratoonzTask/CratoonzTask/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

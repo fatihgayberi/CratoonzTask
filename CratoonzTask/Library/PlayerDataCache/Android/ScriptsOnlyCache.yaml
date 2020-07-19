@@ -2,6 +2,7 @@ ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
     - CreateDrops
+    - SwipeDrop
     Unity.2D.Animation.Editor.dll:
     - UnityEditor.U2D.Animation.BoneGizmo
     Unity.2D.Tilemap.Editor.dll:
@@ -32,12 +33,16 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 48
       Script: {instanceID: 0}
+    - Class: 58
+      Script: {instanceID: 0}
     - Class: 81
       Script: {instanceID: 0}
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
       Script: {instanceID: 11940}
+    - Class: 114
+      Script: {instanceID: 16096}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 157
@@ -219,7 +224,7 @@ ScriptsOnlyBuild:
     className: AnimationPlayableAsset
   - hash:
       serializedVersion: 2
-      Hash: 8cdf7f660bcaa5e65a6fd60d64358648
+      Hash: 85e2c2973975368a960397fa074b7e11
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: CreateDrops
@@ -529,6 +534,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: SwipeDrop
   platform: 13
   scenePathNames:
   - Assets/Scenes/SampleScene.unity
