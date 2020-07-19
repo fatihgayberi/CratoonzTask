@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class CreateDrops : MonoBehaviour
 {
-    public static int width = 8, height = 8; // tablonun yuksekligini ve genisligini tutar
+    public int width = 8, height = 8; // tablonun yuksekligini ve genisligini tutar
     public GameObject[] drops;
-    public GameObject[,] allDrops = new GameObject[height, width]; //
-    int[,] dropArray = new int[height, width];
+    public GameObject[,] allDrops;// = new GameObject[height, width]; //
+    int[,] randArray;// = new int[height, width];
     // Start is called before the first frame update
     void Start()
     {
+        allDrops = new GameObject[height, width]; //
+        randArray = new int[height, width];
         CreateGame(height, width);
     }
 
@@ -20,7 +22,7 @@ public class CreateDrops : MonoBehaviour
         {
             for (int j = 0; j < m; j++) //sutun
             {
-                dropArray[i, j] = Random.Range(0, drops.Length);
+                randArray[i, j] = Random.Range(0, drops.Length);
             }
         }
 
@@ -31,9 +33,10 @@ public class CreateDrops : MonoBehaviour
         {
             for (int j = 0; j < m; j++)
             {
-                allDrops[i, j] = GameObject.Instantiate(drops[dropArray[i, j]], new Vector2(i, j), Quaternion.identity);
+                allDrops[i, j] = GameObject.Instantiate(drops[randArray[i, j]], new Vector2(i, j), Quaternion.identity);
             }
         }
+        //Debug.Log("name: " + allDrops[1, 5].name);
     }
 
     void ColumnControl(int n, int m) // sutun control
@@ -44,10 +47,10 @@ public class CreateDrops : MonoBehaviour
         {
             for (int j = 0; j < m - 2; j++) //sutun
             {
-                while (dropArray[i, j] == dropArray[i, j + 1] && dropArray[i, j + 1] == dropArray[i, j + 2]) // sutunlari duzenler
+                while (randArray[i, j] == randArray[i, j + 1] && randArray[i, j + 1] == randArray[i, j + 2]) // sutunlari duzenler
                 {
                     randNum = Random.Range(0, 3);
-                    dropArray[i, j + 2] = Random.Range(0, drops.Length);
+                    randArray[i, j + 2] = Random.Range(0, drops.Length);
                 }
             }
         }
@@ -61,10 +64,10 @@ public class CreateDrops : MonoBehaviour
         {
             for (int j = 0; j < m; j++) //sutun
             {
-                while (dropArray[i + 1, j] == dropArray[i + 2, j]) // satirlari duzenler
+                while (randArray[i + 1, j] == randArray[i + 2, j]) // satirlari duzenler
                 {
                     randNum = Random.Range(0, 3);
-                    dropArray[i + 2, j] = Random.Range(0, drops.Length);
+                    randArray[i + 2, j] = Random.Range(0, drops.Length);
                 }
             }
         }

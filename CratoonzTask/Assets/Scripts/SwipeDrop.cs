@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class SwipeDrop : MonoBehaviour
 {
-    public int firstX, firstY, finalX, finalY;
+    public int firstX, firstY;
     private Vector2 firstTouchPosition;
     private Vector2 finalTouchPosition;
-    public Vector2 touchObject;
     public CreateDrops table;
     private GameObject emptyDrop;
     public float tangent;
+    public bool flag1 = false, flag2 = false;
     // Start is called before the first frame update
     void Start()
     {
-
+        table = FindObjectOfType<CreateDrops>();
     }
 
     // Update is called once per frame
@@ -29,38 +29,29 @@ public class SwipeDrop : MonoBehaviour
         {
             if (Input.GetTouch(0).phase == TouchPhase.Began)
             {
-                Touch touch = Input.GetTouch(0);
-                touchObject = Camera.main.ScreenToWorldPoint(touch.position);
+                Vector3 pos = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
+                RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero);
                 firstTouchPosition = Camera.main.ScreenToViewportPoint(Input.GetTouch(0).position);
-                
-                if (0 < touchObject.x && touchObject.x < CreateDrops.width && 0 < touchObject.y && touchObject.y < CreateDrops.height)
+
+                if (hit.collider != null)
                 {
-                    firstX = (int)(touchObject.x + 0.5f);
-                    firstY = (int)(touchObject.y + 0.5f);
+                    firstX = (int)hit.collider.transform.position.x;
+                    firstY = (int)hit.collider.transform.position.y;
+                    Debug.Log("First: " + firstX + ", " + firstY);
                 }
-                
-                Debug.Log("First: " + firstX + ", " + firstY);
-                //Debug.Log("FirstPosition: " + firstTouchPosition.x);
+
             }
 
             if (Input.GetTouch(0).phase == TouchPhase.Ended)
             {
-                Touch touch = Input.GetTouch(0);
-                touchObject = Camera.main.ScreenToWorldPoint(touch.position);
+                Vector3 pos = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
+                RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero);
                 finalTouchPosition = Camera.main.ScreenToViewportPoint(Input.GetTouch(0).position);
-                TangentCalculator();
-
-                if (0 < touchObject.x && touchObject.x < CreateDrops.width && 0 < touchObject.y && touchObject.y < CreateDrops.height)
+                if (hit.collider != null)
                 {
-                    finalX = (int)(touchObject.x + 0.5f);
-                    finalY = (int)(touchObject.y + 0.5f);
-                    
+                    TangentCalculator();
                     Swipe();
                 }
-                
-                Debug.Log("First: " + finalX + ", " + finalY);
-                //Debug.Log("FinalPosition: " + finalTouchPosition.x);
-                
             }
         }
     }
@@ -73,17 +64,40 @@ public class SwipeDrop : MonoBehaviour
 
     void Swipe()
     {
-        if (tangent < 45f && tangent > -45f)
+        if (tangent < 45f && tangent > -45f && firstX < table.width - 1) // sag
         {
-            Debug.Log("hi");
-            //Debug.Log("nam: " + table.allDrops[finalX, finalY].name + "\n" + finalX + ", " + finalY);
-            //emptyDrop = table.allDrops[finalX, finalY];
-            //table.allDrops[finalX, finalY].transform.position = new Vector2(table.allDrops[firstX, firstY].transform.position.x, table.allDrops[firstX, firstY].transform.position.y);
-            //table.allDrops[finalX, finalY] = table.allDrops[firstX, firstY];
-            //table.allDrops[firstX, firstY].transform.position = new Vector2(finalX, finalY);
-            //table.allDrops[firstX, firstY] = emptyDrop;
+            emptyDrop = table.allDrops[firstX, firstY];
+            table.allDrops[firstX, firstY] = table.allDrops[firstX + 1, firstY];
+            table.allDrops[firstX, firstY].transform.position = new Vector2(firstX, firstY);
+            table.allDrops[firstX + 1, firstY] = emptyDrop;
+            table.allDrops[firstX + 1, firstY].transform.position = new Vector2(firstX + 1, firstY);
+        }
+
+        else if (tangent > 45f && tangent < 135f && firstY < table.height - 1) // yukari
+        {
+            emptyDrop = table.allDrops[firstX, firstY];
+            table.allDrops[firstX, firstY] = table.allDrops[firstX, firstY + 1];
+            table.allDrops[firstX, firstY].transform.position = new Vector2(firstX, firstY);
+            table.allDrops[firstX, firstY + 1] = emptyDrop;
+            table.allDrops[firstX, firstY + 1].transform.position = new Vector2(firstX, firstY + 1);
+        }
+
+        else if ((tangent > 135f || tangent < -135f) && firstX > 0) // sol
+        {
+            emptyDrop = table.allDrops[firstX, firstY];
+            table.allDrops[firstX, firstY] = table.allDrops[firstX - 1, firstY];
+            table.allDrops[firstX, firstY].transform.position = new Vector2(firstX, firstY);
+            table.allDrops[firstX - 1, firstY] = emptyDrop;
+            table.allDrops[firstX - 1, firstY].transform.position = new Vector2(firstX - 1, firstY);
+        }
+
+        else if (tangent < -45f && tangent > -135f && firstY > 0) // asagi
+        {
+            emptyDrop = table.allDrops[firstX, firstY];
+            table.allDrops[firstX, firstY] = table.allDrops[firstX, firstY - 1];
+            table.allDrops[firstX, firstY].transform.position = new Vector2(firstX, firstY);
+            table.allDrops[firstX, firstY - 1] = emptyDrop;
+            table.allDrops[firstX, firstY - 1].transform.position = new Vector2(firstX, firstY - 1);
         }
     }
-
-
 }
