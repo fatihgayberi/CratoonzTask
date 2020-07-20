@@ -1,8 +1,8 @@
 ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
-    - CreateDrops
     - SwipeDrop
+    - Table
     Unity.2D.Animation.Editor.dll:
     - UnityEditor.U2D.Animation.BoneGizmo
     Unity.2D.Tilemap.Editor.dll:
@@ -227,7 +227,7 @@ ScriptsOnlyBuild:
       Hash: 3919dcf1634c577a611da4c14699ec1e
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: CreateDrops
+    className: Table
   - hash:
       serializedVersion: 2
       Hash: aba7b2852ef61d175dd9602e7723d5e5
@@ -284,7 +284,7 @@ ScriptsOnlyBuild:
     className: Selectable
   - hash:
       serializedVersion: 2
-      Hash: 9397034580bdb420b7f46d2c701dd3aa
+      Hash: a0c5c5385ee1c5eb3d9490717e12d45b
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: SwipeDrop
