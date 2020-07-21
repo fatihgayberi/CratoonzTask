@@ -5,9 +5,9 @@ using UnityEngine;
 public class Table : MonoBehaviour
 {
     public int width = 8, height = 8; // tablonun yuksekligini ve genisligini tutar
-    public GameObject[] drops;
-    public GameObject[,] allDrops;// = new GameObject[height, width]; //
-    int[,] randArray;// = new int[height, width];
+    public GameObject[] drops; // temel prefablari icerir
+    public GameObject[,] allDrops; // tum droplari tutar
+    int[,] randArray; // randrom sayilari tutar
     // Start is called before the first frame update
     void Start()
     {
@@ -36,20 +36,16 @@ public class Table : MonoBehaviour
                 allDrops[i, j] = GameObject.Instantiate(drops[randArray[i, j]], new Vector2(i, j), Quaternion.identity);
             }
         }
-        //Debug.Log("name: " + allDrops[1, 5].name);
     }
 
     void ColumnControl(int n, int m) // sutun control
     {
-        int randNum;
-
         for (int i = 0; i < n; i++) //satir
         {
             for (int j = 0; j < m - 2; j++) //sutun
             {
                 while (randArray[i, j] == randArray[i, j + 1] && randArray[i, j + 1] == randArray[i, j + 2]) // sutunlari duzenler
                 {
-                    randNum = Random.Range(0, 3);
                     randArray[i, j + 2] = Random.Range(0, drops.Length);
                 }
             }
@@ -58,21 +54,17 @@ public class Table : MonoBehaviour
 
     void LineControl(int n, int m) // satir control
     {
-        int randNum;
-
         for (int i = 0; i < n - 2; i += 2) //satir
         {
             for (int j = 0; j < m; j++) //sutun
             {
                 while (randArray[i + 1, j] == randArray[i + 2, j]) // satirlari duzenler
                 {
-                    randNum = Random.Range(0, 3);
                     randArray[i + 2, j] = Random.Range(0, drops.Length);
                 }
             }
         }
     }
-
 
     // Update is called once per frame
     void Update()

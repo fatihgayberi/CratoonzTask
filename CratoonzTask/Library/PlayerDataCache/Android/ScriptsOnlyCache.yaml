@@ -1,7 +1,8 @@
 ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
-    - SwipeDrop
+    - Match
+    - Swipe
     - Table
     Unity.2D.Animation.Editor.dll:
     - UnityEditor.U2D.Animation.BoneGizmo
@@ -42,7 +43,9 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11940}
     - Class: 114
-      Script: {instanceID: 12410}
+      Script: {instanceID: 12322}
+    - Class: 114
+      Script: {instanceID: 12412}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 157
@@ -284,10 +287,16 @@ ScriptsOnlyBuild:
     className: Selectable
   - hash:
       serializedVersion: 2
-      Hash: a0c5c5385ee1c5eb3d9490717e12d45b
+      Hash: 0f9c4d7f263d73ccd9a4ab399acbb78a
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: SwipeDrop
+    className: Match
+  - hash:
+      serializedVersion: 2
+      Hash: 1d378fa5f89e5d943d7843800e474b05
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Swipe
   - hash:
       serializedVersion: 2
       Hash: b3ab2106268377ffe25dd18ac23dca28

@@ -146,6 +146,19 @@ MonoBehaviour:
   - {fileID: 6526316086959778112, guid: 03cea4b06a5116b49b2f49bda0795ccb, type: 3}
   - {fileID: 5873714354528682941, guid: f5ff3f4e97005bf42ac7d9067e153a53, type: 3}
   - {fileID: 6176245350554099167, guid: 0a99d6387d3430345a16b8f606f44b1c, type: 3}
+--- !u!114 &270134433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 270134431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1548f3a8206ab246895bafe5fb45e5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  table: {fileID: 0}
 --- !u!114 &270134435
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,8 +176,6 @@ MonoBehaviour:
   match: {fileID: 0}
   table: {fileID: 0}
   tangent: 0
-  flag1: 0
-  flag2: 0
 --- !u!114 &270134436
 MonoBehaviour:
   m_ObjectHideFlags: 0

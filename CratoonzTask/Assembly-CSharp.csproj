@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Match.cs" />
+    <Compile Include="Assets\Scripts\Slide.cs" />
     <Compile Include="Assets\Scripts\Swipe.cs" />
     <Compile Include="Assets\Scripts\Table.cs" />
     <Reference Include="Unity.Timeline.Editor">

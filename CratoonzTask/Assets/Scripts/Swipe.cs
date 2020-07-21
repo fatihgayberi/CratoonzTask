@@ -11,9 +11,7 @@ public class Swipe : MonoBehaviour
     private Vector2 finalTouchPosition;
     public Match match;
     public Table table;
-    private GameObject emptyDrop;
     public float tangent;
-    public bool flag1 = false, flag2 = false;
     void Start()
     {
         match = FindObjectOfType<Match>();
@@ -61,9 +59,10 @@ public class Swipe : MonoBehaviour
         tangent = Mathf.Atan2(finalTouchPosition.y - firstTouchPosition.y, finalTouchPosition.x - firstTouchPosition.x) * 180 / Mathf.PI;
     }
 
-    void SwipeDrop() // acilardan sonrasini kontrol amacli silmeyi unutma 
+    void SwipeDrop()
     {
-        if (tangent < 45f && tangent > -45f && firstX < table.width - 1) // sag
+        // sag
+        if (tangent < 45f && tangent > -45f && firstX < table.width - 1)
         {
             Debug.Log("sag");
             Debug.Log("First: " + firstX + ", " + firstY);
@@ -90,57 +89,85 @@ public class Swipe : MonoBehaviour
             }            
         }
 
-        else if (tangent > 45f && tangent < 135f && firstY < table.height - 1) // yukari
+        // yukari
+        else if (tangent > 45f && tangent < 135f && firstY < table.height - 1)
         {
-            //Debug.Log("First: " + firstX + ", " + firstY);
-            //Debug.Log("Second: " + firstX + ", " + (firstY + 1));
-            //if (match.MatchDrop(firstX, firstY, firstX, firstY + 1))
-            //{
-            //    Debug.Log("tamam oldu");
-            //
-            //    if (table.allDrops[firstX, firstY + 1] != null)
-            //    {
-            //        table.allDrops[firstX, firstY + 1].transform.position = new Vector2(firstX, firstY);
-            //        table.allDrops[firstX, firstY] = table.allDrops[firstX, firstY + 1];
-            //
-            //    }
-            //    else if (table.allDrops[firstX, firstY] != null)
-            //    {
-            //        table.allDrops[firstX, firstY].transform.position = new Vector2(firstX, firstY + 1);
-            //        table.allDrops[firstX, firstY + 1] = table.allDrops[firstX, firstY];
-            //    }
-            //}
-            //else
-            //{
-            //    // animasyonla ters duz olacak
-            //}
+            Debug.Log("First: " + firstX + ", " + firstY);
+            Debug.Log("Second: " + firstX + ", " + (firstY + 1));
+            if (match.MatchDrop(firstX, firstY, firstX, firstY + 1))
+            {
+                Debug.Log("tamam oldu");
             
-            //Debug.Log("yukari");
-            //emptyDrop = table.allDrops[firstX, firstY];
-            //table.allDrops[firstX, firstY] = table.allDrops[firstX, firstY + 1];
-            //table.allDrops[firstX, firstY].transform.position = new Vector2(firstX, firstY);
-            //table.allDrops[firstX, firstY + 1] = emptyDrop;
-            //table.allDrops[firstX, firstY + 1].transform.position = new Vector2(firstX, firstY + 1);
+                if (table.allDrops[firstX, firstY + 1] != null)
+                {
+                    table.allDrops[firstX, firstY + 1].transform.position = new Vector2(firstX, firstY);
+                    table.allDrops[firstX, firstY] = table.allDrops[firstX, firstY + 1];
+            
+                }
+                else if (table.allDrops[firstX, firstY] != null)
+                {
+                    table.allDrops[firstX, firstY].transform.position = new Vector2(firstX, firstY + 1);
+                    table.allDrops[firstX, firstY + 1] = table.allDrops[firstX, firstY];
+                }
+            }
+            else
+            {
+                // animasyonla ters duz olacak
+            }
         }
 
-        else if ((tangent > 135f || tangent < -135f) && firstX > 0) // sol
+        // sol
+        else if ((tangent > 135f || tangent < -135f) && firstX > 0)
         {
-            //Debug.Log("sol");
-            //emptyDrop = table.allDrops[firstX, firstY];
-            //table.allDrops[firstX, firstY] = table.allDrops[firstX - 1, firstY];
-            //table.allDrops[firstX, firstY].transform.position = new Vector2(firstX, firstY);
-            //table.allDrops[firstX - 1, firstY] = emptyDrop;
-            //table.allDrops[firstX - 1, firstY].transform.position = new Vector2(firstX - 1, firstY);
+            Debug.Log("First: " + firstX + ", " + firstY);
+            Debug.Log("Second: " + firstX + ", " + (firstY + 1));
+            if (match.MatchDrop(firstX, firstY, firstX - 1, firstY))
+            {
+                Debug.Log("tamam oldu");
+            
+                if (table.allDrops[firstX - 1, firstY] != null)
+                {
+                    table.allDrops[firstX - 1, firstY ].transform.position = new Vector2(firstX, firstY);
+                    table.allDrops[firstX, firstY] = table.allDrops[firstX - 1, firstY];
+            
+                }
+                else if (table.allDrops[firstX, firstY] != null)
+                {
+                    table.allDrops[firstX, firstY].transform.position = new Vector2(firstX - 1, firstY);
+                    table.allDrops[firstX - 1, firstY] = table.allDrops[firstX, firstY];
+                }
+            }
+            else
+            {
+                // animasyonla ters duz olacak
+            }
         }
 
-        else if (tangent < -45f && tangent > -135f && firstY > 0) // asagı
+        // asagı
+        else if (tangent < -45f && tangent > -135f && firstY > 0)
         {
-            //Debug.Log("asagı");
-            emptyDrop = table.allDrops[firstX, firstY];
-            table.allDrops[firstX, firstY] = table.allDrops[firstX, firstY - 1];
-            table.allDrops[firstX, firstY].transform.position = new Vector2(firstX, firstY);
-            table.allDrops[firstX, firstY - 1] = emptyDrop;
-            table.allDrops[firstX, firstY - 1].transform.position = new Vector2(firstX, firstY - 1);
+            Debug.Log("First: " + firstX + ", " + firstY);
+            Debug.Log("Second: " + firstX + ", " + (firstY - 1));
+            if (match.MatchDrop(firstX, firstY, firstX, firstY - 1))
+            {
+                Debug.Log("tamam oldu");
+            
+                if (table.allDrops[firstX, firstY - 1] != null)
+                {
+                    table.allDrops[firstX, firstY - 1].transform.position = new Vector2(firstX, firstY);
+                    table.allDrops[firstX, firstY] = table.allDrops[firstX, firstY - 1];
+            
+                }
+                else if (table.allDrops[firstX, firstY] != null)
+                {
+                    table.allDrops[firstX, firstY].transform.position = new Vector2(firstX, firstY - 1);
+                    table.allDrops[firstX, firstY - 1] = table.allDrops[firstX, firstY];
+                }
+            }
+            else
+            {
+                // animasyonla ters duz olacak
+            }
         }
     }
 }
