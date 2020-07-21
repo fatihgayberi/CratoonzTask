@@ -160,10 +160,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   firstX: 0
   firstY: 0
-  finalX: 0
-  finalY: 0
+  match: {fileID: 0}
   table: {fileID: 0}
   tangent: 0
+  flag1: 0
+  flag2: 0
+--- !u!114 &270134436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 270134431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0c2d9752afb2464ea368e7dc7d13b03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  table: {fileID: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
