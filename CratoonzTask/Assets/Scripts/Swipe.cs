@@ -6,12 +6,13 @@ using UnityEngine;
 
 public class Swipe : MonoBehaviour
 {
-    public int firstX, firstY;
-    private Vector2 firstTouchPosition;
-    private Vector2 finalTouchPosition;
-    public Match match;
-    public Table table;
-    public float tangent;
+    int firstX, firstY; // ilk dropun x ve y indexlerini tutar
+    Vector2 firstTouchPosition; // ilk dokunulan noktanin positionlarını tutar
+    Vector2 finalTouchPosition; // ikinci dokunulan noktanin positionlarını tutar
+    Match match;
+    Table table;
+    float tangent;
+    Animator directionAnim, fallAnim1, fallAnim2;
     void Start()
     {
         match = FindObjectOfType<Match>();
@@ -23,29 +24,35 @@ public class Swipe : MonoBehaviour
         Touch();
     }
 
+    // dokunma islemini gercekler
     void Touch()
     {
         if (Input.touchCount == 1)
         {
-            if (Input.GetTouch(0).phase == TouchPhase.Began)
+            // ilk dokunulan dropu isler
+            if (Input.GetTouch(0).phase == TouchPhase.Began) 
             {
                 Vector3 pos = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
                 RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero);
                 firstTouchPosition = Camera.main.ScreenToViewportPoint(Input.GetTouch(0).position);
 
-                if (hit.collider != null)
+                // dokunulan yerin drop olup olmadigini anlar ve x-y positionlarını tutar
+                if (hit.collider != null) 
                 {
-                    firstX = (int)hit.collider.transform.position.x;
-                    firstY = (int)hit.collider.transform.position.y;
+                    firstX = (int)Mathf.Round(hit.collider.transform.position.x); 
+                    firstY = (int)Mathf.Round(hit.collider.transform.position.y);
                 }
             }
 
-            if (Input.GetTouch(0).phase == TouchPhase.Ended)
+            // ikinci dokunulan dropu isler
+            if (Input.GetTouch(0).phase == TouchPhase.Ended) 
             {
                 Vector3 pos = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
                 RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero);
                 finalTouchPosition = Camera.main.ScreenToViewportPoint(Input.GetTouch(0).position);
-                if (hit.collider != null)
+
+                // dokunulan yerin drop olup olmadigini anlar
+                if (hit.collider != null) 
                 {
                     TangentCalculator();
                     SwipeDrop();
@@ -54,120 +61,120 @@ public class Swipe : MonoBehaviour
         }
     }
 
-    void TangentCalculator()
+    // ilk ve son dokunulan noktalarin arasindaki tanjant acisini hesaplar
+    void TangentCalculator() 
     {
         tangent = Mathf.Atan2(finalTouchPosition.y - firstTouchPosition.y, finalTouchPosition.x - firstTouchPosition.x) * 180 / Mathf.PI;
     }
 
+    // dropun bos olup olmadigini kontrol eder
+    bool DropNull(int x, int y) 
+    {
+        if (table.getAllDrops(x, y) != null)
+            return true;
+
+        else
+            return false;
+    }
+
+    // eslesme olursa gerceklesmesi gereken animasyon islemlerini yapar
+    void AnimationDirection(string direction, int x1, int y1, int x2, int y2) 
+    {
+        directionAnim = table.getAllDrops(x1, y1).GetComponent<Animator>();
+        directionAnim.SetBool(direction, true);
+        table.DropTrans(x2, y2, x1, y1);
+    }
+
+    // eslesme olursa gerceklesmesi gereken animasyon islemlerini yapar
+    void AnimationFall(string fall1, string fall2, int x1, int y1, int x2, int y2)
+    {
+        fallAnim1 = table.getAllDrops(x1, y1).GetComponent<Animator>();
+        fallAnim1.SetBool(fall1, true);
+        fallAnim2 = table.getAllDrops(x2, y2).GetComponent<Animator>();
+        fallAnim2.SetBool(fall2, true);
+    }
+
+    // swipe islemlerini gercekler
     void SwipeDrop()
     {
-        // sag
-        if (tangent < 45f && tangent > -45f && firstX < table.width - 1)
+        // saga dogru yapilan swipe islemleri
+        if (tangent < 45f && tangent > -45f && firstX < table.getWidth() - 1)
         {
-            Debug.Log("sag");
-            Debug.Log("First: " + firstX + ", " + firstY);
-            Debug.Log("Second: " + (firstX + 1) + ", " + firstY);
-            
+            // yapilan islemin eslesme olusturup olusturmadigi kontrol edilir
             if (match.MatchDrop(firstX, firstY, firstX + 1, firstY))
             {
-                Debug.Log("tamam oldu");
+                // ikinci drop yok olursa birinci dropun animasyonunu oynatir ve dizideki yerini duzenler
+                if (DropNull(firstX, firstY))
+                    AnimationDirection("Right", firstX, firstY, firstX + 1, firstY);
+
+                // birinci drop yok olursa ikinci dropun animasyonunu oynatir ve dizideki yerini duzenler
+                else if (DropNull(firstX + 1, firstY))
+                    AnimationDirection("Left", firstX + 1, firstY, firstX, firstY);                 
+            }
             
-                if (table.allDrops[firstX + 1, firstY] != null)
-                {
-                    table.allDrops[firstX + 1, firstY].transform.position = new Vector2(firstX, firstY);
-                    table.allDrops[firstX, firstY] = table.allDrops[firstX + 1, firstY];
-                    
-                }
-                else if (table.allDrops[firstX, firstY] != null)
-                {
-                    table.allDrops[firstX, firstY].transform.position = new Vector2(firstX + 1, firstY);
-                    table.allDrops[firstX + 1, firstY] = table.allDrops[firstX, firstY];
-                }
-            } else
-            {
-                // animasyonla ters duz olacak
-            }            
+            // eslesme olmaz ise animasyonla droplar return animasyonu gercekler
+            else
+                AnimationFall("RightReturn", "LeftReturn", firstX, firstY, firstX + 1, firstY);
         }
 
-        // yukari
-        else if (tangent > 45f && tangent < 135f && firstY < table.height - 1)
+        // yukari dogru yapilan swipe islemleri
+        else if (tangent > 45f && tangent < 135f && firstY < table.getHeight() - 1)
         {
-            Debug.Log("First: " + firstX + ", " + firstY);
-            Debug.Log("Second: " + firstX + ", " + (firstY + 1));
+            // yapilan islemin eslesme olusturup olusturmadigi kontrol edilir
             if (match.MatchDrop(firstX, firstY, firstX, firstY + 1))
             {
-                Debug.Log("tamam oldu");
-            
-                if (table.allDrops[firstX, firstY + 1] != null)
-                {
-                    table.allDrops[firstX, firstY + 1].transform.position = new Vector2(firstX, firstY);
-                    table.allDrops[firstX, firstY] = table.allDrops[firstX, firstY + 1];
-            
-                }
-                else if (table.allDrops[firstX, firstY] != null)
-                {
-                    table.allDrops[firstX, firstY].transform.position = new Vector2(firstX, firstY + 1);
-                    table.allDrops[firstX, firstY + 1] = table.allDrops[firstX, firstY];
-                }
+                // ikinci drop yok olursa birinci dropun animasyonunu oynatir ve dizideki yerini duzenler
+                if (DropNull(firstX, firstY))
+                    AnimationDirection("Up", firstX, firstY, firstX, firstY + 1);
+
+                // birinci drop yok olursa ikinci dropun animasyonunu oynatir ve dizideki yerini duzenler
+                else if (DropNull(firstX, firstY + 1))
+                    AnimationDirection("Down", firstX, firstY + 1, firstX, firstY);
             }
+
+            // eslesme olmaz ise animasyonla droplar return animasyonu gercekler
             else
-            {
-                // animasyonla ters duz olacak
-            }
+                AnimationFall("UpReturn", "DownReturn", firstX, firstY, firstX, firstY + 1);
         }
 
-        // sol
+        // sola dogru yapilan swipe islemleri
         else if ((tangent > 135f || tangent < -135f) && firstX > 0)
         {
-            Debug.Log("First: " + firstX + ", " + firstY);
-            Debug.Log("Second: " + firstX + ", " + (firstY + 1));
+            // yapilan islemin eslesme olusturup olusturmadigi kontrol edilir
             if (match.MatchDrop(firstX, firstY, firstX - 1, firstY))
             {
-                Debug.Log("tamam oldu");
-            
-                if (table.allDrops[firstX - 1, firstY] != null)
-                {
-                    table.allDrops[firstX - 1, firstY ].transform.position = new Vector2(firstX, firstY);
-                    table.allDrops[firstX, firstY] = table.allDrops[firstX - 1, firstY];
-            
-                }
-                else if (table.allDrops[firstX, firstY] != null)
-                {
-                    table.allDrops[firstX, firstY].transform.position = new Vector2(firstX - 1, firstY);
-                    table.allDrops[firstX - 1, firstY] = table.allDrops[firstX, firstY];
-                }
+                // ikinci drop yok olursa birinci dropun animasyonunu oynatir ve dizideki yerini duzenler
+                if (DropNull(firstX, firstY))
+                    AnimationDirection("Left", firstX, firstY, firstX - 1, firstY);
+
+                // birinci drop yok olursa ikinci dropun animasyonunu oynatir ve dizideki yerini duzenler
+                else if (DropNull(firstX - 1, firstY))
+                    AnimationDirection("Right", firstX - 1, firstY, firstX, firstY);
             }
+
+            // eslesme olmaz ise animasyonla droplar return animasyonu gercekler
             else
-            {
-                // animasyonla ters duz olacak
-            }
+                AnimationFall("LeftReturn", "RightReturn", firstX, firstY, firstX - 1, firstY);
         }
 
-        // asagı
+        // asagi dogru yapilan swipe islemleri
         else if (tangent < -45f && tangent > -135f && firstY > 0)
         {
-            Debug.Log("First: " + firstX + ", " + firstY);
-            Debug.Log("Second: " + firstX + ", " + (firstY - 1));
+            // yapilan islemin eslesme olusturup olusturmadigi kontrol edilir
             if (match.MatchDrop(firstX, firstY, firstX, firstY - 1))
             {
-                Debug.Log("tamam oldu");
-            
-                if (table.allDrops[firstX, firstY - 1] != null)
-                {
-                    table.allDrops[firstX, firstY - 1].transform.position = new Vector2(firstX, firstY);
-                    table.allDrops[firstX, firstY] = table.allDrops[firstX, firstY - 1];
-            
-                }
-                else if (table.allDrops[firstX, firstY] != null)
-                {
-                    table.allDrops[firstX, firstY].transform.position = new Vector2(firstX, firstY - 1);
-                    table.allDrops[firstX, firstY - 1] = table.allDrops[firstX, firstY];
-                }
+                // ikinci drop yok olursa birinci dropun animasyonunu oynatir ve dizideki yerini duzenler
+                if (DropNull(firstX, firstY))
+                    AnimationDirection("Down", firstX, firstY, firstX, firstY - 1);
+
+                // birinci drop yok olursa ikinci dropun animasyonunu oynatir ve dizideki yerini duzenler
+                else if (DropNull(firstX, firstY - 1))
+                    AnimationDirection("Up", firstX, firstY - 1, firstX, firstY);
             }
+
+            // eslesme olmaz ise animasyonla droplar return animasyonu gercekler
             else
-            {
-                // animasyonla ters duz olacak
-            }
+                AnimationFall("DownReturn", "UpReturn", firstX, firstY, firstX, firstY - 1);
         }
     }
 }

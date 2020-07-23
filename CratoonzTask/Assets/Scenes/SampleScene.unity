@@ -176,6 +176,7 @@ MonoBehaviour:
   match: {fileID: 0}
   table: {fileID: 0}
   tangent: 0
+  animator: {fileID: 0}
 --- !u!114 &270134436
 MonoBehaviour:
   m_ObjectHideFlags: 0

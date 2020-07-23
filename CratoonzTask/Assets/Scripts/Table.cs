@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Table : MonoBehaviour
 {
-    public int width = 8, height = 8; // tablonun yuksekligini ve genisligini tutar
+    int width = 8, height = 8; // tablonun yuksekligini ve genisligini tutar
     public GameObject[] drops; // temel prefablari icerir
-    public GameObject[,] allDrops; // tum droplari tutar
+    GameObject[,] allDrops; // tum droplari tutar
     int[,] randArray; // randrom sayilari tutar
-    // Start is called before the first frame update
+
     void Start()
     {
         allDrops = new GameObject[height, width]; //
@@ -16,19 +16,54 @@ public class Table : MonoBehaviour
         CreateGame(height, width);
     }
 
+    // cagirilan dropu return eder
+    public GameObject getAllDrops(int x, int y)
+    {
+        return allDrops[x, y];
+    }
+
+    // dropu oyundan siler
+    public void DestroyDrop(int x, int y) {
+        Destroy(allDrops[x, y]);
+        allDrops[x, y] = null;
+    }
+
+    // oyun tahtasinin genisligini return eder
+    public int getWidth()
+    {
+        return width;
+    }
+
+    // oyun tahtasinin uzunlugunu return eder
+    public int getHeight()
+    {
+        return height;
+    }
+
+    // droplar arasi trans yapar
+    public void DropTrans(int x1, int y1, int x2, int y2)
+    {
+        allDrops[x1, y1] = allDrops[x2, y2];
+    }
+
+    // rastgele drop olusturur ve konumlandirir
     void CreateGame(int n, int m)
     {
-        for (int i = 0; i < n; i++) //satir
+        // rastgele drop olusturur
+        for (int i = 0; i < n; i++)
         {
-            for (int j = 0; j < m; j++) //sutun
+            for (int j = 0; j < m; j++) 
             {
                 randArray[i, j] = Random.Range(0, drops.Length);
             }
         }
+        
+        // sutun control
+        ColumnControl(n, m);
+        // satir control
+        LineControl(n, m);
 
-        ColumnControl(n, m); // sutun control
-        LineControl(n, m); // satir control
-
+        // droplari konumlandirir
         for (int i = 0; i < n; i++)
         {
             for (int j = 0; j < m; j++)
@@ -38,11 +73,12 @@ public class Table : MonoBehaviour
         }
     }
 
+    // sutunda baslangic sirasinda eslesme olmamasini engeller
     void ColumnControl(int n, int m) // sutun control
     {
-        for (int i = 0; i < n; i++) //satir
+        for (int i = 0; i < n; i++)
         {
-            for (int j = 0; j < m - 2; j++) //sutun
+            for (int j = 0; j < m - 2; j++)
             {
                 while (randArray[i, j] == randArray[i, j + 1] && randArray[i, j + 1] == randArray[i, j + 2]) // sutunlari duzenler
                 {
@@ -52,6 +88,7 @@ public class Table : MonoBehaviour
         }
     }
 
+    // satir baslangic sirasinda eslesme olmamasini engeller
     void LineControl(int n, int m) // satir control
     {
         for (int i = 0; i < n - 2; i += 2) //satir

@@ -2,6 +2,7 @@ ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
     - Match
+    - Slide
     - Swipe
     - Table
     Unity.2D.Animation.Editor.dll:
@@ -16,6 +17,15 @@ ScriptsOnlyBuild:
     - Unity.DeviceSimulator.SimulatorWindow
     Unity.Rider.Editor.dll:
     - Packages.Rider.Editor.UnitTesting.CallbackData
+    UnityEditor.Graphs.dll:
+    - UnityEditor.Graphs.AnimationBlendTree.Graph
+    - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.AnimatorStateTransitionInspector
+    - UnityEditor.Graphs.AnimationStateMachine.AnyStateNode
+    - UnityEditor.Graphs.AnimationStateMachine.Graph
+    - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.StateNode
+    - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
     - UnityEditor.TestTools.TestRunner.TestListCacheData
@@ -36,7 +46,13 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 58
       Script: {instanceID: 0}
+    - Class: 74
+      Script: {instanceID: 0}
     - Class: 81
+      Script: {instanceID: 0}
+    - Class: 91
+      Script: {instanceID: 0}
+    - Class: 95
       Script: {instanceID: 0}
     - Class: 104
       Script: {instanceID: 0}
@@ -46,6 +62,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 12322}
     - Class: 114
       Script: {instanceID: 12412}
+    - Class: 114
+      Script: {instanceID: 13268}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 157
@@ -293,7 +311,7 @@ ScriptsOnlyBuild:
     className: Match
   - hash:
       serializedVersion: 2
-      Hash: 1d378fa5f89e5d943d7843800e474b05
+      Hash: 95e2859e65882fc47353545c1a4e1a5e
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Swipe
@@ -381,6 +399,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: HorizontalLayoutGroup
+  - hash:
+      serializedVersion: 2
+      Hash: 0f9c4d7f263d73ccd9a4ab399acbb78a
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Slide
   - hash:
       serializedVersion: 2
       Hash: 35a9693c388776aaf487636491a20f11
