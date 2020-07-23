@@ -307,7 +307,7 @@ public class Match : MonoBehaviour
             }
         }
 
-        //
+        // hatali hareket
         if (!next)
         {
             switch (swipe.getStatus())
