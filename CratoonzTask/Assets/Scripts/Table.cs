@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Table : MonoBehaviour
 {
-    int width = 8, height = 8; // tablonun yuksekligini ve genisligini tutar
+    const int width = 8, height = 8; // tablonun yuksekligini ve genisligini tutar
     public GameObject[] drops; // temel prefablari icerir
     GameObject[,] allDrops; // tum droplari tutar
     int[,] randArray; // randrom sayilari tutar
@@ -44,6 +44,13 @@ public class Table : MonoBehaviour
     public void DropTrans(int x1, int y1, int x2, int y2)
     {
         allDrops[x1, y1] = allDrops[x2, y2];
+    }
+
+    public void SwapDrop(int x1, int y1, int x2, int y2)
+    {
+        GameObject emptyDrop = allDrops[x1, y1];
+        allDrops[x1, y1] = allDrops[x2, y2];
+        allDrops[x2, y2] = emptyDrop;
     }
 
     // rastgele drop olusturur ve konumlandirir

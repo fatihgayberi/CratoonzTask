@@ -8,8 +8,9 @@ using UnityEngine;
 
 public class Match : MonoBehaviour
 {
-    private Table table;
-    private Animator anim;
+    Table table;
+    Swipe swipe;
+    Animator anim1, anim2, fallAnim1, fallAnim2;
     int firstCountX1;
     int firstCountX2;
     int secondCountX1;
@@ -25,6 +26,7 @@ public class Match : MonoBehaviour
     void Start()
     {
         table = FindObjectOfType<Table>();
+        swipe = FindObjectOfType<Swipe>();
     }
 
     public bool getNext()
@@ -47,265 +49,25 @@ public class Match : MonoBehaviour
             return true;
     }
 
+    void AnimationFall(string fall1, string fall2, int x1, int y1, int x2, int y2)
+    {
+        fallAnim1 = table.getAllDrops(x1, y1).GetComponent<Animator>();
+        fallAnim1.SetBool(fall1, true);
+        fallAnim2 = table.getAllDrops(x2, y2).GetComponent<Animator>();
+        fallAnim2.SetBool(fall2, true);
+    }
+
     // eslesme olunca olmasi gereken animasyonlari oynatir
-    void DropAnimation(string direction, int x, int y)
+    void DropAnimation(string direction1, string direction2, int x1, int y1, int x2, int y2)
     {
-        anim = table.getAllDrops(x, y).GetComponent<Animator>();
-        anim.SetBool(direction, true);
+        anim1 = table.getAllDrops(x1, y1).GetComponent<Animator>();
+        anim1.SetBool(direction1, true);
+        anim2 = table.getAllDrops(x2, y2).GetComponent<Animator>();
+        anim2.SetBool(direction2, true);
     }
 
-    IEnumerator MatchingAnimation(int x1, int y1, int x2, int y2)
-    {
-        // sag-sol
-        if (Mathf.Abs(x2 - x1) == 1)
-        {
-            // sag
-            if ((x2 - x1) == 1)
-            {
-                if (firstCountX1 + 1 >= 3)
-                {
-                    DropAnimation("Right", x1, y1);
-                    yield return new WaitForSeconds(2);
-                    table.DestroyDrop(x1, y1);
-
-                    for (int i = x2 + 1; i <= x2 + firstCountX1; i++)
-                    {
-                        table.DestroyDrop(i, y1);
-                    }
-                }
-
-                // ikinci dropun yer degistikten sonraki konumunun x eksenini temizler
-                if (secondCountX1 + 1 >= 3)
-                {
-                    DropAnimation("Left", x2, y2);
-                    yield return new WaitForSeconds(2);
-                    table.DestroyDrop(x2, y2);
-
-                    for (int i = x1 - 1; i >= x1 - secondCountX1; i--)
-                    {
-                        table.DestroyDrop(i, y2);
-                    }
-                }
-            }
-
-            //sol
-            if ((x2 - x1) == -1)
-            {
-                // birinci dropun yer degistikten sonraki konumunun x eksenini temizler
-                if (firstCountX1 + 1 >= 3)
-                {
-                    DropAnimation("Left", x1, y1);
-                    yield return new WaitForSeconds(2);
-
-                    table.DestroyDrop(x1, y1);
-                    for (int i = x2 - 1; i <= x2 - firstCountX1; i--)
-                    {
-                        table.DestroyDrop(i, y2);
-                    }
-                }
-
-                // ikinci dropun yer degistikten sonraki konumunun x eksenini temizler
-                if (secondCountX1 + 1 >= 3)
-                {
-                    DropAnimation("Right", x2, y2);
-                    yield return new WaitForSeconds(2);
-
-                    table.DestroyDrop(x2, y2);
-
-                    for (int i = x1 + 1; i <= x1 + secondCountX1; i++)
-                    {
-                        table.DestroyDrop(i, y1);
-                    }
-
-                }
-            }
-
-
-            // birinci dropun yer degistikten sonraki konumunun y eksenini temizler
-            if (firstCountY1 + firstCountY2 + 1 >= 3)
-            {
-                if (DropNull(x1, y1))
-                {
-                    if ((x2 - x1) == 1) // sag
-                    {
-                        DropAnimation("Right", x1, y1);
-                        yield return new WaitForSeconds(2);
-                    }
-
-                    if ((x2 - x1) == -1) // sol
-                    {
-                        DropAnimation("Left", x1, y1);
-                        yield return new WaitForSeconds(2);
-                    }
-                    table.DestroyDrop(x1, y1);
-                }
-
-                for (int i = y2 + 1; i <= y2 + firstCountY1; i++)
-                {
-                    table.DestroyDrop(x2, i);
-                }
-                for (int i = y2 - 1; i >= y2 - firstCountY2; i--)
-                {
-                    table.DestroyDrop(x2, i);
-                }
-
-            }
-
-            // ikinci dropun yer degistikten sonraki konumunun y eksenini temizler
-            if (secondCountY1 + secondCountY2 + 1 >= 3)
-            {
-                if (DropNull(x2, y2))
-                {
-                    if ((x2 - x1) == 1) // sag
-                    {
-                        DropAnimation("Left", x2, y2);
-                        yield return new WaitForSeconds(2);
-                    }
-
-                    if ((x2 - x1) == -1) // sol
-                    {
-                        DropAnimation("Right", x2, y2);
-                        yield return new WaitForSeconds(2);
-                    }
-
-                    table.DestroyDrop(x2, y2);
-                }
-                for (int i = y2 + 1; i <= y2 + secondCountY1; i++)
-                {
-                    table.DestroyDrop(x1, i);
-                }
-                for (int i = y2 - 1; i >= y2 - secondCountY2; i--)
-                {
-                    table.DestroyDrop(x1, i);
-                }
-            }
-
-            if (firstCountX1 + 1 >= 3 || secondCountX1 + 1 >= 3 || firstCountY1 + firstCountY2 + 1 >= 3 || secondCountY1 + secondCountY2 + 1 >= 3)
-            {
-                next = true;
-            }
-
-            else if (!(firstCountX1 + 1 >= 3 || secondCountX1 + 1 >= 3 || firstCountY1 + firstCountY2 + 1 >= 3 || secondCountY1 + secondCountY2 + 1 >= 3))
-            {
-                next = false;
-            }
-        }
-
-        // yukari-asagi
-        if (Mathf.Abs(y2 - y1) == 1)
-        {
-            // yukariya
-            if ((y2 - y1) == 1)
-            {
-                // birinci dropun yer degistikten sonraki konumunun y eksenini temizler
-                if (firstCountY1 + 1 >= 3)
-                {
-                    table.DestroyDrop(x1, y1);
-                    yield return new WaitForSeconds(2);
-
-                    for (int i = y2 + 1; i <= y2 + firstCountY1; i++)
-                    {
-                        table.DestroyDrop(x1, i);
-                    }
-                }
-
-                // ikinci dropun yer degistikten sonraki konumunun y eksenini temizler
-                if (secondCountY2 + 1 >= 3)
-                {
-                    table.DestroyDrop(x2, y2);
-                    yield return new WaitForSeconds(2);
-
-                    for (int i = y1 - 1; i >= y1 - secondCountY2; i--)
-                    {
-                        table.DestroyDrop(x2, i);
-                    }
-                }
-            }
-
-            // asagiya
-            if ((y2 - y1) == -1)
-            {
-                // birinci dropun yer degistikten sonraki konumunun y eksenini temizler
-                if (firstCountY1 + 1 >= 3)
-                {
-                    table.DestroyDrop(x1, y1);
-                    yield return new WaitForSeconds(2);
-
-                    for (int i = y2 - 1; i >= y2 - firstCountY1; i--)
-                    {
-                        table.DestroyDrop(x1, i);
-                    }
-                }
-
-                // ikinci dropun yer degistikten sonraki konumunun y eksenini temizler
-                if (secondCountY2 + 1 >= 3)
-                {
-                    table.DestroyDrop(x2, y2);
-                    yield return new WaitForSeconds(2);
-
-                    for (int i = y1 + 1; i <= y1 + secondCountY2; i++)
-                    {
-                        table.DestroyDrop(x1, i);
-                    }
-                }
-            }
-
-
-            if (firstCountX1 + firstCountX2 + 1 >= 3)
-            {
-                // birinci dropun yer degistikten sonraki konumunun x eksenini temizler
-                if (DropNull(x1, y1))
-                {
-                    table.DestroyDrop(x1, y1);
-                    yield return new WaitForSeconds(2);
-                }
-                for (int i = x2 + 1; i <= x2 + firstCountX1; i++)
-                {
-                    table.DestroyDrop(i, y2);
-                }
-                for (int i = x2 - 1; i >= x2 - firstCountX2; i--)
-                {
-                    table.DestroyDrop(i, y2);
-                }
-            }
-
-            if (secondCountX1 + secondCountX2 + 1 >= 3)
-            {
-                // ikinci dropun yer degistikten sonraki konumunun x eksenini temizler
-                if (DropNull(x2, y2))
-                {
-                    table.DestroyDrop(x2, y2);
-                    yield return new WaitForSeconds(2);
-                }
-                for (int i = x1 + 1; i <= x1 + secondCountX1; i++)
-                {
-                    table.DestroyDrop(i, y1);
-                }
-                for (int i = x1 - 1; i >= x1 - secondCountX2; i--)
-                {
-                    table.DestroyDrop(i, y1);
-                }
-            }
-
-            if (firstCountX1 + firstCountX2 + 1 >= 3 || secondCountX1 + secondCountX2 + 1 >= 3 || firstCountY1 + 1 >= 3 || secondCountY2 + 1 >= 3)
-            {
-                next = true;
-            }
-            else if (!(firstCountX1 + firstCountX2 + 1 >= 3 || secondCountX1 + secondCountX2 + 1 >= 3 || firstCountY1 + 1 >= 3 || secondCountY2 + 1 >= 3))
-            {
-                next = false;
-            }
-        }
-
-        // hatali hareket
-        else
-        {
-            next = false;
-        }
-    }
-
-    // eslesme olup olmadigini return eder
-    public void MatchDrop(int x1, int y1, int x2, int y2)
+    // degiskenlere 0 atar
+    void ValueReset()
     {
         firstCountX1 = 0;
         firstCountX2 = 0;
@@ -315,6 +77,263 @@ public class Match : MonoBehaviour
         firstCountY2 = 0;
         secondCountY1 = 0;
         secondCountY2 = 0;
+        i1 = 0;
+        i2 = 0;
+        j1 = 0;
+        j2 = 0;
+    }
+
+    // dropun animasyonlarini oynatir ve eksenlerdeki droplar destroy eder 
+    IEnumerator MatchingAnimation(int x1, int y1, int x2, int y2)
+    {
+        // sag-sol
+        if (Mathf.Abs(x2 - x1) == 1)
+        {
+            // eslesme oldu ise animasyonları gercekler ve dropları destroy eder
+            if (firstCountX1 + 1 >= 3 || secondCountX1 + 1 >= 3 || firstCountY1 + firstCountY2 + 1 >= 3 || secondCountY1 + secondCountY2 + 1 >= 3)
+            {
+                next = true;
+
+                // sag
+                if ((x2 - x1) == 1)
+                {
+                    DropAnimation("Right", "Left", x1, y1, x2, y2);
+                }
+
+                // sol
+                if ((x2 - x1) == -1)
+                {
+                    DropAnimation("Left", "Right", x1, y1, x2, y2);
+                }
+
+                yield return new WaitForSeconds(1.2f);
+
+                // sag
+                if ((x2 - x1) == 1)
+                {
+                    if (firstCountX1 + 1 >= 3)
+                    {
+                        table.DestroyDrop(x1, y1);
+
+                        for (int i = x2 + 1; i <= x2 + firstCountX1; i++)
+                        {
+                            table.DestroyDrop(i, y1);
+                        }
+                    }
+
+                    // ikinci dropun yer degistikten sonraki konumunun x eksenini temizler
+                    if (secondCountX1 + 1 >= 3)
+                    {
+                        table.DestroyDrop(x2, y2);
+
+                        for (int i = x1 - 1; i >= x1 - secondCountX1; i--)
+                        {
+                            table.DestroyDrop(i, y2);
+                        }
+                    }
+                }
+
+                //sol
+                if ((x2 - x1) == -1)
+                {
+                    // birinci dropun yer degistikten sonraki konumunun x eksenini temizler
+                    if (firstCountX1 + 1 >= 3)
+                    {
+                        table.DestroyDrop(x1, y1);
+
+                        for (int i = x2 - 1; i <= x2 - firstCountX1; i--)
+                        {
+                            table.DestroyDrop(i, y2);
+                        }
+                    }
+
+                    // ikinci dropun yer degistikten sonraki konumunun x eksenini temizler
+                    if (secondCountX1 + 1 >= 3)
+                    {
+                        table.DestroyDrop(x2, y2);
+
+                        for (int i = x1 + 1; i <= x1 + secondCountX1; i++)
+                        {
+                            table.DestroyDrop(i, y1);
+                        }
+
+                    }
+                }
+
+
+                // birinci dropun yer degistikten sonraki konumunun y eksenini temizler
+                if (firstCountY1 + firstCountY2 + 1 >= 3)
+                {
+                    if (DropNull(x1, y1))
+                    {
+                        table.DestroyDrop(x1, y1);
+                    }
+
+                    for (int i = y2 + 1; i <= y2 + firstCountY1; i++)
+                    {
+                        table.DestroyDrop(x2, i);
+                    }
+                    for (int i = y2 - 1; i >= y2 - firstCountY2; i--)
+                    {
+                        table.DestroyDrop(x2, i);
+                    }
+
+                }
+
+                // ikinci dropun yer degistikten sonraki konumunun y eksenini temizler
+                if (secondCountY1 + secondCountY2 + 1 >= 3)
+                {
+                    if (DropNull(x2, y2))
+                    {
+                        table.DestroyDrop(x2, y2);
+                    }
+                    for (int i = y2 + 1; i <= y2 + secondCountY1; i++)
+                    {
+                        table.DestroyDrop(x1, i);
+                    }
+                    for (int i = y2 - 1; i >= y2 - secondCountY2; i--)
+                    {
+                        table.DestroyDrop(x1, i);
+                    }
+                }
+
+            }
+        }
+
+        // yukari-asagi
+        if (Mathf.Abs(y2 - y1) == 1)
+        {
+            // eslesme oldu ise animasyonları gercekler ve dropları destroy eder
+            if (firstCountX1 + firstCountX2 + 1 >= 3 || secondCountX1 + secondCountX2 + 1 >= 3 || firstCountY1 + 1 >= 3 || secondCountY2 + 1 >= 3)
+            {
+                next = true;
+
+                // yukari
+                if ((y2 - y1) == 1)
+                {
+                    DropAnimation("Up", "Down", x1, y1, x2, y2);
+                }
+
+                // asagi
+                if ((y2 - y1) == -1)
+                {
+                    DropAnimation("Down", "Up", x1, y1, x2, y2);
+                }
+
+                yield return new WaitForSeconds(1.2f);
+
+                // yukari
+                if ((y2 - y1) == 1)
+                {
+                    // birinci dropun yer degistikten sonraki konumunun y eksenini temizler
+                    if (firstCountY1 + 1 >= 3)
+                    {
+                        table.DestroyDrop(x1, y1);
+                        for (int i = y2 + 1; i <= y2 + firstCountY1; i++)
+                        {
+                            table.DestroyDrop(x1, i);
+                        }
+                    }
+
+                    // ikinci dropun yer degistikten sonraki konumunun y eksenini temizler
+                    if (secondCountY2 + 1 >= 3)
+                    {
+                        table.DestroyDrop(x2, y2);
+                        for (int i = y1 - 1; i >= y1 - secondCountY2; i--)
+                        {
+                            table.DestroyDrop(x2, i);
+                        }
+                    }
+                }
+
+                // asagi
+                if ((y2 - y1) == -1)
+                {
+                    // birinci dropun yer degistikten sonraki konumunun y eksenini temizler
+                    if (firstCountY1 + 1 >= 3)
+                    {
+                        table.DestroyDrop(x1, y1);
+                        for (int i = y2 - 1; i >= y2 - firstCountY1; i--)
+                        {
+                            table.DestroyDrop(x1, i);
+                        }
+                    }
+
+                    // ikinci dropun yer degistikten sonraki konumunun y eksenini temizler
+                    if (secondCountY2 + 1 >= 3)
+                    {
+                        table.DestroyDrop(x2, y2);
+                        for (int i = y1 + 1; i <= y1 + secondCountY2; i++)
+                        {
+                            table.DestroyDrop(x1, i);
+                        }
+                    }
+                }
+
+                if (firstCountX1 + firstCountX2 + 1 >= 3)
+                {
+                    // birinci dropun yer degistikten sonraki konumunun x eksenini temizler
+                    if (DropNull(x1, y1))
+                    {
+                        table.DestroyDrop(x1, y1);
+                    }
+                    for (int i = x2 + 1; i <= x2 + firstCountX1; i++)
+                    {
+                        table.DestroyDrop(i, y2);
+                    }
+                    for (int i = x2 - 1; i >= x2 - firstCountX2; i--)
+                    {
+                        table.DestroyDrop(i, y2);
+                    }
+                }
+
+                if (secondCountX1 + secondCountX2 + 1 >= 3)
+                {
+                    // ikinci dropun yer degistikten sonraki konumunun x eksenini temizler
+                    if (DropNull(x2, y2))
+                    {
+                        table.DestroyDrop(x2, y2);
+                    }
+                    for (int i = x1 + 1; i <= x1 + secondCountX1; i++)
+                    {
+                        table.DestroyDrop(i, y1);
+                    }
+                    for (int i = x1 - 1; i >= x1 - secondCountX2; i--)
+                    {
+                        table.DestroyDrop(i, y1);
+                    }
+                }
+
+            }
+        }
+
+        //
+        if (!next)
+        {
+            switch (swipe.getStatus())
+            {
+                case "Right":
+                    AnimationFall("RightReturn", "LeftReturn", x1, y1, x2, y2);
+                    break;
+                case "Up":
+                    AnimationFall("UpReturn", "DownReturn", x1, y1, x2, y2);
+                    break;
+                case "Left":
+                    AnimationFall("LeftReturn", "RightReturn", x1, y1, x2, y2);
+                    break;
+                case "Down":
+                    AnimationFall("DownReturn", "UpReturn", x1, y1, x2, y2);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    // eslesme olup olmadigini return eder
+    public void MatchDrop(int x1, int y1, int x2, int y2)
+    {
+        ValueReset();
 
         //sag-sol swipe
         if (Mathf.Abs(x2 - x1) == 1)
@@ -369,30 +388,6 @@ public class Match : MonoBehaviour
                     secondCountX1++;
                     i2--;
                 }
-
-                /*// birinci dropun yer degistikten sonraki konumunun x eksenini temizler
-                if (firstCountX1 + 1 >= 3)
-                {
-                    DropAnimation("Right", x1, y1);
-                    table.DestroyDrop(x1, y1);
-                    
-                    for (int i = x2 + 1; i <= x2 + firstCountX1; i++)
-                    {
-                        table.DestroyDrop(i, y1);
-                    }
-                }
-
-                // ikinci dropun yer degistikten sonraki konumunun x eksenini temizler
-                if (secondCountX1 + 1 >= 3)
-                {
-                    DropAnimation("Left", x2, y2);
-                    table.DestroyDrop(x2, y2);
-
-                    for (int i = x1 - 1; i >= x1 - secondCountX1; i--)
-                    {
-                        table.DestroyDrop(i, y2);
-                    }
-                }*/
             }
 
             // sol
@@ -413,102 +408,10 @@ public class Match : MonoBehaviour
                     secondCountX1++;
                     i2++;
                 }
-
-                /*// birinci dropun yer degistikten sonraki konumunun x eksenini temizler
-                if (firstCountX1 + 1 >= 3)
-                {
-                    DropAnimation("Left", x1, y1);
-
-                    table.DestroyDrop(x1, y1);
-                    for (int i = x2 - 1; i <= x2 - firstCountX1; i--)
-                        table.DestroyDrop(i, y2);
-                }
-
-                // ikinci dropun yer degistikten sonraki konumunun x eksenini temizler
-                if (secondCountX1 + 1 >= 3)
-                {
-                    DropAnimation("Right", x2, y2);
-
-                    table.DestroyDrop(x2, y2);
-
-                    for (int i = x1 + 1; i <= x1 + secondCountX1; i++)
-                    {
-                        table.DestroyDrop(i, y1);
-                    }
-                    
-                }*/
             }
 
-            /*// birinci dropun yer degistikten sonraki konumunun y eksenini temizler
-            if (firstCountY1 + firstCountY2 + 1 >= 3)
-            {
-                if (DropNull(x1, y1))
-                {
-                    if ((x2 - x1) == 1) // sag
-                    {
-                        DropAnimation("Right", x1, y1);
-                    }
-
-                    if ((x2 - x1) == -1) // sol
-                    {
-                        DropAnimation("Left", x1, y1);
-                    }
-                    table.DestroyDrop(x1, y1);
-                }
-
-                for (int i = y2 + 1; i <= y2 + firstCountY1; i++)
-                {
-                    table.DestroyDrop(x2, i);
-                }
-                for (int i = y2 - 1; i >= y2 - firstCountY2; i--)
-                {
-                    table.DestroyDrop(x2, i);
-                }
-
-            }
-
-            // ikinci dropun yer degistikten sonraki konumunun y eksenini temizler
-            if (secondCountY1 + secondCountY2 + 1 >= 3)
-            {
-                if (DropNull(x2, y2))
-                {
-                    if ((x2 - x1) == 1) // sag
-                    {
-                        DropAnimation("Left", x2, y2);
-                    }
-
-
-                    if ((x2 - x1) == -1) // sol
-                    {
-                        DropAnimation("Right", x2, y2);
-
-
-                    }
-
-                    //while (!AnimationFinish("Left") || AnimationFinish("Right"))
-                    table.DestroyDrop(x2, y2);
-                }
-                for (int i = y2 + 1; i <= y2 + secondCountY1; i++)
-                {
-                    table.DestroyDrop(x1, i);
-                }
-                for (int i = y2 - 1; i >= y2 - secondCountY2; i--)
-                {
-                    table.DestroyDrop(x1, i);
-                }
-            }
-
-            if (firstCountX1 + 1 >= 3 || secondCountX1 + 1 >= 3 || firstCountY1 + firstCountY2 + 1 >= 3 || secondCountY1 + secondCountY2 + 1 >= 3)
-            {
-                return true;
-            }
-            else
-            {
-                Debug.Log("else1");
-                return false;
-            }*/
             StartCoroutine(MatchingAnimation(x1, y1, x2, y2));
-            //return next;
+
         }
 
         // yukari-asagi swipe
@@ -564,28 +467,8 @@ public class Match : MonoBehaviour
                     secondCountY2++;
                     j2--;
                 }
-
-                //// birinci dropun yer degistikten sonraki konumunun y eksenini temizler
-                //if (firstCountY1 + 1 >= 3)
-                //{
-                //    table.DestroyDrop(x1, y1);
-                //    for (int i = y2 + 1; i <= y2 + firstCountY1; i++)
-                //    {
-                //        table.DestroyDrop(x1, i);
-                //    }
-                //}
-                //
-                //// ikinci dropun yer degistikten sonraki konumunun y eksenini temizler
-                //if (secondCountY2 + 1 >= 3)
-                //{
-                //    table.DestroyDrop(x2, y2);
-                //    for (int i = y1 - 1; i >= y1 - secondCountY2; i--)
-                //    {
-                //        table.DestroyDrop(x2, i);
-                //    }
-                //}
             }
-            
+
             // asagiya
             if ((y2 - y1) == -1)
             {
@@ -604,79 +487,10 @@ public class Match : MonoBehaviour
                     secondCountY2++;
                     j2++;
                 }
-
-                //// birinci dropun yer degistikten sonraki konumunun y eksenini temizler
-                //if (firstCountY1 + 1 >= 3)
-                //{
-                //    table.DestroyDrop(x1, y1);
-                //    for (int i = y2 - 1; i >= y2 - firstCountY1; i--)
-                //    {
-                //        table.DestroyDrop(x1, i);
-                //    }
-                //}
-                //
-                //// ikinci dropun yer degistikten sonraki konumunun y eksenini temizler
-                //if (secondCountY2 + 1 >= 3)
-                //{
-                //    table.DestroyDrop(x2, y2);
-                //    for (int i = y1 + 1; i <= y1 + secondCountY2; i++)
-                //    {
-                //        table.DestroyDrop(x1, i);
-                //    }
-                //}
             }
-
-
-            /*if (firstCountX1 + firstCountX2 + 1 >= 3)
-            {
-                // birinci dropun yer degistikten sonraki konumunun x eksenini temizler
-                if (DropNull(x1, y1))
-                {
-                    table.DestroyDrop(x1, y1);
-                }
-                for (int i = x2 + 1; i <= x2 + firstCountX1; i++)
-                {
-                    table.DestroyDrop(i, y2);
-                }
-                for (int i = x2 - 1; i >= x2 - firstCountX2; i--)
-                {
-                    table.DestroyDrop(i, y2);
-                }
-            }
-
-            if (secondCountX1 + secondCountX2 + 1 >= 3)
-            {
-                // ikinci dropun yer degistikten sonraki konumunun x eksenini temizler
-                if (DropNull(x2, y2))
-                {
-                    table.DestroyDrop(x2, y2);
-                }
-                for (int i = x1 + 1; i <= x1 + secondCountX1; i++)
-                {
-                    table.DestroyDrop(i, y1);
-                }
-                for (int i = x1 - 1; i >= x1 - secondCountX2; i--)
-                {
-                    table.DestroyDrop(i, y1);
-                }
-            }
-
-            if (firstCountX1 + firstCountX2 + 1 >= 3 || secondCountX1 + secondCountX2 + 1 >= 3 || firstCountY1 + 1 >= 3 || secondCountY2 + 1 >= 3)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }*/
 
             StartCoroutine(MatchingAnimation(x1, y1, x2, y2));
         }
 
-        // hatali hareket
-        //else
-        //{
-        //    //return next;
-        //}
     }
 }

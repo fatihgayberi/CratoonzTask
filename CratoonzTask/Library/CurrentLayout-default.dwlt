@@ -71,10 +71,10 @@ MonoBehaviour:
     y: 0
     width: 649
     height: 741
-  m_MinSize: {x: 201, y: 342}
+  m_MinSize: {x: 101, y: 242}
   m_MaxSize: {x: 4001, y: 8042}
   vertical: 1
-  controlID: 49
+  controlID: 121
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -95,10 +95,10 @@ MonoBehaviour:
     y: 30
     width: 1536
     height: 741
-  m_MinSize: {x: 676, y: 342}
+  m_MinSize: {x: 576, y: 321}
   m_MaxSize: {x: 12003, y: 8042}
   vertical: 1
-  controlID: 164
+  controlID: 98
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -151,7 +151,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 321}
   m_MaxSize: {x: 4002, y: 8021}
   vertical: 1
-  controlID: 112
+  controlID: 100
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -267,10 +267,10 @@ MonoBehaviour:
     y: 0
     width: 1536
     height: 741
-  m_MinSize: {x: 676, y: 342}
+  m_MinSize: {x: 576, y: 321}
   m_MaxSize: {x: 12003, y: 8042}
   vertical: 0
-  controlID: 165
+  controlID: 99
 --- !u!114 &12
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -281,7 +281,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 1
   m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: SceneView
+  m_Name: AnimatorControllerTool
   m_EditorClassIdentifier: 
   m_Children: []
   m_Position:
@@ -290,14 +290,14 @@ MonoBehaviour:
     y: 0
     width: 649
     height: 494
-  m_MinSize: {x: 201, y: 221}
+  m_MinSize: {x: 101, y: 121}
   m_MaxSize: {x: 4001, y: 4021}
-  m_ActualView: {fileID: 17}
+  m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 17}
   - {fileID: 15}
-  m_Selected: 0
-  m_LastSelected: 1
+  m_Selected: 1
+  m_LastSelected: 0
 --- !u!114 &13
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -352,7 +352,7 @@ MonoBehaviour:
   m_ViewDataDictionary: {fileID: 0}
   m_LockTracker:
     m_IsLocked: 0
-  m_LastSelectedObjectID: -25192
+  m_LastSelectedObjectID: 14594
 --- !u!114 &15
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -383,14 +383,14 @@ MonoBehaviour:
     m_KeySerializationHelper:
     - {fileID: -6712220055508495214, guid: 467fa910bb45f8740ba67c90ca1d54cf, type: 2}
     m_ValueSerializationHelper:
-    - e00: 0.59474707
+    - e00: 0.36524904
       e01: 0
       e02: 0
-      e03: -181.93388
+      e03: -94.91949
       e10: 0
-      e11: 0.59474707
+      e11: 0.36524904
       e12: 0
-      e13: 22.41671
+      e13: 128.36542
       e20: 0
       e21: 0
       e22: 1
@@ -814,9 +814,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 989dffff
+      m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 6afbffff
+      m_ExpandedIDs: 469efeff589efeff0c9ffeff6afbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
