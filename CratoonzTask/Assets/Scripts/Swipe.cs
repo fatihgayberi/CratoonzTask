@@ -12,6 +12,7 @@ public class Swipe : MonoBehaviour
     Match match;
     Table table;
     float tangent;
+    bool status;
     Animator directionAnim, fallAnim1, fallAnim2;
     void Start()
     {
@@ -55,7 +56,7 @@ public class Swipe : MonoBehaviour
                 if (hit.collider != null) 
                 {
                     TangentCalculator();
-                    SwipeDrop();
+                    StartCoroutine(SwipeDrop());
                 }
             }
         }
@@ -95,13 +96,16 @@ public class Swipe : MonoBehaviour
     }
 
     // swipe islemlerini gercekler
-    void SwipeDrop()
+    IEnumerator SwipeDrop()
     {
         // saga dogru yapilan swipe islemleri
         if (tangent < 45f && tangent > -45f && firstX < table.getWidth() - 1)
         {
+            match.MatchDrop(firstX, firstY, firstX + 1, firstY);
+            yield return new WaitForSeconds(4);
+
             // yapilan islemin eslesme olusturup olusturmadigi kontrol edilir
-            if (match.MatchDrop(firstX, firstY, firstX + 1, firstY))
+            if (match.getNext())//match.MatchDrop(firstX, firstY, firstX + 1, firstY))
             {
                 // ikinci drop yok olursa birinci dropun animasyonunu oynatir ve dizideki yerini duzenler
                 if (DropNull(firstX, firstY))
@@ -111,17 +115,19 @@ public class Swipe : MonoBehaviour
                 else if (DropNull(firstX + 1, firstY))
                     AnimationDirection("Left", firstX + 1, firstY, firstX, firstY);                 
             }
-            
+
             // eslesme olmaz ise animasyonla droplar return animasyonu gercekler
-            else
+            else if (!match.getNext())
                 AnimationFall("RightReturn", "LeftReturn", firstX, firstY, firstX + 1, firstY);
         }
 
         // yukari dogru yapilan swipe islemleri
         else if (tangent > 45f && tangent < 135f && firstY < table.getHeight() - 1)
         {
+            match.MatchDrop(firstX, firstY, firstX, firstY + 1);
+            yield return new WaitForSeconds(4);
             // yapilan islemin eslesme olusturup olusturmadigi kontrol edilir
-            if (match.MatchDrop(firstX, firstY, firstX, firstY + 1))
+            if (match.getNext())//match.MatchDrop(firstX, firstY, firstX, firstY + 1))
             {
                 // ikinci drop yok olursa birinci dropun animasyonunu oynatir ve dizideki yerini duzenler
                 if (DropNull(firstX, firstY))
@@ -133,15 +139,18 @@ public class Swipe : MonoBehaviour
             }
 
             // eslesme olmaz ise animasyonla droplar return animasyonu gercekler
-            else
+            else if (!match.getNext())
                 AnimationFall("UpReturn", "DownReturn", firstX, firstY, firstX, firstY + 1);
         }
 
         // sola dogru yapilan swipe islemleri
         else if ((tangent > 135f || tangent < -135f) && firstX > 0)
         {
+            match.MatchDrop(firstX, firstY, firstX - 1, firstY);
+            yield return new WaitForSeconds(4);
+
             // yapilan islemin eslesme olusturup olusturmadigi kontrol edilir
-            if (match.MatchDrop(firstX, firstY, firstX - 1, firstY))
+            if (match.getNext())//match.MatchDrop(firstX, firstY, firstX - 1, firstY))
             {
                 // ikinci drop yok olursa birinci dropun animasyonunu oynatir ve dizideki yerini duzenler
                 if (DropNull(firstX, firstY))
@@ -153,15 +162,18 @@ public class Swipe : MonoBehaviour
             }
 
             // eslesme olmaz ise animasyonla droplar return animasyonu gercekler
-            else
+            else if (!match.getNext())
                 AnimationFall("LeftReturn", "RightReturn", firstX, firstY, firstX - 1, firstY);
         }
 
         // asagi dogru yapilan swipe islemleri
         else if (tangent < -45f && tangent > -135f && firstY > 0)
         {
+            match.MatchDrop(firstX, firstY, firstX, firstY - 1);
+            yield return new WaitForSeconds(4);
+
             // yapilan islemin eslesme olusturup olusturmadigi kontrol edilir
-            if (match.MatchDrop(firstX, firstY, firstX, firstY - 1))
+            if (match.getNext())//match.MatchDrop(firstX, firstY, firstX, firstY - 1))
             {
                 // ikinci drop yok olursa birinci dropun animasyonunu oynatir ve dizideki yerini duzenler
                 if (DropNull(firstX, firstY))
@@ -173,7 +185,7 @@ public class Swipe : MonoBehaviour
             }
 
             // eslesme olmaz ise animasyonla droplar return animasyonu gercekler
-            else
+            else if (!match.getNext())
                 AnimationFall("DownReturn", "UpReturn", firstX, firstY, firstX, firstY - 1);
         }
     }

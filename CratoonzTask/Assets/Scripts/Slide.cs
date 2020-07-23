@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Slide : MonoBehaviour
 {
-    public Table table;
+    private Table table;
     // Start is called before the first frame update
     void Start()
     {
