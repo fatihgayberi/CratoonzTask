@@ -29,11 +29,6 @@ public class Match : MonoBehaviour
         swipe = FindObjectOfType<Swipe>();
     }
 
-    public bool getNext()
-    {
-        return next;
-    }
-
     // dropun ismini return eder
     string DropName(int x, int y)
     {
@@ -49,6 +44,7 @@ public class Match : MonoBehaviour
             return true;
     }
 
+    // hatali hareketin animasyonlarini gercekler
     void AnimationFall(string fall1, string fall2, int x1, int y1, int x2, int y2)
     {
         fallAnim1 = table.getAllDrops(x1, y1).GetComponent<Animator>();
@@ -94,13 +90,13 @@ public class Match : MonoBehaviour
             {
                 next = true;
 
-                // sag
+                // sag animasyonunu oynatir
                 if ((x2 - x1) == 1)
                 {
                     DropAnimation("Right", "Left", x1, y1, x2, y2);
                 }
 
-                // sol
+                // sol animasyonunu oynatir
                 if ((x2 - x1) == -1)
                 {
                     DropAnimation("Left", "Right", x1, y1, x2, y2);
@@ -111,6 +107,7 @@ public class Match : MonoBehaviour
                 // sag
                 if ((x2 - x1) == 1)
                 {
+                    // birinci dropun yer degistikten sonraki konumunun x eksenini temizler
                     if (firstCountX1 + 1 >= 3)
                     {
                         table.DestroyDrop(x1, y1);
@@ -156,10 +153,8 @@ public class Match : MonoBehaviour
                         {
                             table.DestroyDrop(i, y1);
                         }
-
                     }
                 }
-
 
                 // birinci dropun yer degistikten sonraki konumunun y eksenini temizler
                 if (firstCountY1 + firstCountY2 + 1 >= 3)
@@ -177,7 +172,6 @@ public class Match : MonoBehaviour
                     {
                         table.DestroyDrop(x2, i);
                     }
-
                 }
 
                 // ikinci dropun yer degistikten sonraki konumunun y eksenini temizler
@@ -197,6 +191,7 @@ public class Match : MonoBehaviour
                     }
                 }
 
+                table.SwapDrop(x1, y1, x2, y2);
             }
         }
 
@@ -270,9 +265,9 @@ public class Match : MonoBehaviour
                     }
                 }
 
+                // birinci dropun yer degistikten sonraki konumunun x eksenini temizler
                 if (firstCountX1 + firstCountX2 + 1 >= 3)
                 {
-                    // birinci dropun yer degistikten sonraki konumunun x eksenini temizler
                     if (DropNull(x1, y1))
                     {
                         table.DestroyDrop(x1, y1);
@@ -287,9 +282,9 @@ public class Match : MonoBehaviour
                     }
                 }
 
+                // ikinci dropun yer degistikten sonraki konumunun x eksenini temizler
                 if (secondCountX1 + secondCountX2 + 1 >= 3)
                 {
-                    // ikinci dropun yer degistikten sonraki konumunun x eksenini temizler
                     if (DropNull(x2, y2))
                     {
                         table.DestroyDrop(x2, y2);
@@ -304,6 +299,7 @@ public class Match : MonoBehaviour
                     }
                 }
 
+                table.SwapDrop(x1, y1, x2, y2);
             }
         }
 
@@ -327,7 +323,7 @@ public class Match : MonoBehaviour
                 default:
                     break;
             }
-        }
+        }        
     }
 
     // eslesme olup olmadigini return eder
@@ -491,6 +487,5 @@ public class Match : MonoBehaviour
 
             StartCoroutine(MatchingAnimation(x1, y1, x2, y2));
         }
-
     }
 }

@@ -5,13 +5,13 @@ using UnityEngine;
 public class Table : MonoBehaviour
 {
     const int width = 8, height = 8; // tablonun yuksekligini ve genisligini tutar
-    public GameObject[] drops; // temel prefablari icerir
+    public List<GameObject> drops = new List<GameObject>(); // temel prefablari icerir
     GameObject[,] allDrops; // tum droplari tutar
     int[,] randArray; // randrom sayilari tutar
 
     void Start()
     {
-        allDrops = new GameObject[height, width]; //
+        allDrops = new GameObject[height, width];
         randArray = new int[height, width];
         CreateGame(height, width);
     }
@@ -40,12 +40,7 @@ public class Table : MonoBehaviour
         return height;
     }
 
-    // droplar arasi trans yapar
-    public void DropTrans(int x1, int y1, int x2, int y2)
-    {
-        allDrops[x1, y1] = allDrops[x2, y2];
-    }
-
+    // iki dropu swap islemi yapar
     public void SwapDrop(int x1, int y1, int x2, int y2)
     {
         GameObject emptyDrop = allDrops[x1, y1];
@@ -59,16 +54,15 @@ public class Table : MonoBehaviour
         // rastgele drop olusturur
         for (int i = 0; i < n; i++)
         {
+            // random table olusturur
             for (int j = 0; j < m; j++) 
             {
-                randArray[i, j] = Random.Range(0, drops.Length);
+                randArray[i, j] = Random.Range(0, drops.Count);
             }
         }
-        
-        // sutun control
-        ColumnControl(n, m);
-        // satir control
-        LineControl(n, m);
+
+        CloumnControl(n, m); // sutunlari duzenler
+        LineControl(n, m); //satirlari duzenler
 
         // droplari konumlandirir
         for (int i = 0; i < n; i++)
@@ -81,7 +75,7 @@ public class Table : MonoBehaviour
     }
 
     // sutunda baslangic sirasinda eslesme olmamasini engeller
-    void ColumnControl(int n, int m) // sutun control
+    void CloumnControl(int n, int m)
     {
         for (int i = 0; i < n; i++)
         {
@@ -89,30 +83,43 @@ public class Table : MonoBehaviour
             {
                 while (randArray[i, j] == randArray[i, j + 1] && randArray[i, j + 1] == randArray[i, j + 2]) // sutunlari duzenler
                 {
-                    randArray[i, j + 2] = Random.Range(0, drops.Length);
+                    randArray[i, j + 2] = Random.Range(0, drops.Count);
                 }
             }
         }
     }
 
-    // satir baslangic sirasinda eslesme olmamasini engeller
-    void LineControl(int n, int m) // satir control
+    // sutunlarin olusum esnasinda olsuturdugu hatalari giderir
+    void LineControl(int n, int m)
     {
-        for (int i = 0; i < n - 2; i += 2) //satir
+        for (int i = 0; i < n; i++)
         {
-            for (int j = 0; j < m; j++) //sutun
+            if (i > 1 && i < n - 2)
             {
-                while (randArray[i + 1, j] == randArray[i + 2, j]) // satirlari duzenler
+                for (int j = 0; j < m; j++)
                 {
-                    randArray[i + 2, j] = Random.Range(0, drops.Length);
+                    if (j < m - 2)
+                    {
+                        while ((randArray[i - 2, j] == randArray[i, j] && randArray[i, j] == randArray[i - 1, j])
+                            || (randArray[i - 1, j] == randArray[i, j] && randArray[i, j] == randArray[i + 1, j])
+                            || (randArray[i + 1, j] == randArray[i, j] && randArray[i, j] == randArray[i + 2, j])
+                            || (randArray[i, j + 1] == randArray[i, j] && randArray[i, j] == randArray[i, j + 2]))
+                        {
+                            randArray[i, j] = Random.Range(0, drops.Count);
+                        }
+                    }
+                    else
+                    {
+                        while ((randArray[i - 2, j] == randArray[i, j] && randArray[i, j] == randArray[i - 1, j]
+                            || randArray[i - 1, j] == randArray[i, j] && randArray[i, j] == randArray[i + 1, j])
+                            || randArray[i + 1, j] == randArray[i, j] && randArray[i, j] == randArray[i + 2, j]
+                            || randArray[i, j - 1] == randArray[i, j] && randArray[i, j] == randArray[i, j - 2])
+                        {
+                            randArray[i, j] = Random.Range(0, drops.Count);
+                        }
+                    }
                 }
             }
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }

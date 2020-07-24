@@ -13,14 +13,15 @@ public class Swipe : MonoBehaviour
     Vector2 finalTouchPosition; // ikinci dokunulan noktanin positionlarını tutar
     Match match;
     Table table;
-    Animator directionAnim;
 
+    // Start is called before the first frame update
     void Start()
     {
         match = FindObjectOfType<Match>();
         table = FindObjectOfType<Table>();
     }
 
+    // Update is called once per frame
     void Update()
     {
         Touch();
@@ -73,24 +74,6 @@ public class Swipe : MonoBehaviour
     void TangentCalculator() 
     {
         tangent = Mathf.Atan2(finalTouchPosition.y - firstTouchPosition.y, finalTouchPosition.x - firstTouchPosition.x) * 180 / Mathf.PI;
-    }
-
-    // dropun bos olup olmadigini kontrol eder
-    bool DropNull(int x, int y) 
-    {
-        if (table.getAllDrops(x, y) != null)
-            return true;
-
-        else
-            return false;
-    }
-
-    // eslesme olursa gerceklesmesi gereken animasyon islemlerini yapar
-    void AnimationDirection(string direction, int x1, int y1, int x2, int y2) 
-    {
-        directionAnim = table.getAllDrops(x1, y1).GetComponent<Animator>();
-        directionAnim.SetBool(direction, true);
-        table.DropTrans(x2, y2, x1, y1);
     }
 
     // swipe islemlerini gercekler
